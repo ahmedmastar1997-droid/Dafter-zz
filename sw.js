@@ -1,4 +1,4 @@
-const VERSION='1.10.0',CACHE='gradebook-'+VERSION,FILES=['./','index.html','manifest.json','icon.svg','icon-192.png','icon-512.png'];
+const VERSION='1.11.0',CACHE='gradebook-'+VERSION,FILES=['./','index.html','manifest.json','icon.svg','icon-192.png','icon-512.png'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES.map(f=>new Request(f,{cache:'reload'}))))));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!=CACHE&&x.startsWith('gradebook-')).map(x=>caches.delete(x)))).then(()=>self.clients.claim())));
 self.addEventListener('message',e=>{if(e.data=='SKIP_WAITING')self.skipWaiting()});
