@@ -719,9 +719,16 @@ function wlcShow(){const o=document.createElement('div');o.id='wlc';o.setAttribu
 A.wlcx=()=>{const o=document.getElementById('wlc');if(o)o.remove()};
 A.wlci=async()=>{if(DIP){await A.instApp();A.wlcx()}else{const h=document.getElementById('wlh');if(h)h.textContent=wlcHint();toast(wlcHint())}};
 try{window.addEventListener('beforeinstallprompt',()=>{const h=document.getElementById('wlh');if(h)h.textContent=wlcHint()});window.addEventListener('appinstalled',A.wlcx);setTimeout(()=>{if(wlcNeeded())wlcShow()},1600)}catch(_){}
+
+/* ===== 1.28.2: بيان النسخة الاحتياطية ===== */
+function bkStats(){const c={m:0,d:0,x:0,o:0},dts=new Set();for(const k in S.scores){const p=k.split('|')[0];if(p=='m'||p=='md')c.m++;else if(p=='d'){c.d++;dts.add(k.split('|')[3])}else if(p=='x'||p=='wo')c.x++;else c.o++}return{st:S.students.length,ent:S.students.filter(x=>x.ent).length,cl:S.classes.length,sc:S.sections.length,m:c.m,d:c.d,days:dts.size,x:c.x,o:c.o,tot:c.m+c.d+c.x}}
+function bkStatement(size){const s=bkStats(),n=new Date(),td='padding:5px 6px;border-bottom:1px solid #e2e8f0',row=(a,b)=>`<tr><td style="${td}">${a}</td><td style="${td};font-weight:700;text-align:left">${b}</td></tr>`;return`<div class=cc style="margin:8px 0"><b>📋 بيان النسخة الاحتياطية</b><table style="width:100%;border-collapse:collapse;margin-top:6px">${row('عدد الطلاب',s.st+(s.ent?` (منهم ${s.ent} منتسب)`:''))}${row('عدد الصفوف / الشعب',s.cl+' / '+s.sc)}${row('الدرجات الشهرية',s.m)}${row('الدرجات اليومية',s.d+(s.days?` (في ${s.days} تاريخ)`:''))}${row('درجات السجل الوسطي',s.x)}${row('<b>إجمالي الدرجات</b>','<b>'+s.tot+'</b>')}${s.o?row('غيابات وملاحظات',s.o):''}${size?row('حجم الملف',(size/1024).toFixed(1)+' KB'):''}</table><p class=m style="margin:6px 0 0">${n.toLocaleDateString('ar-IQ')} ${n.toLocaleTimeString('ar-IQ',{hour:'2-digit',minute:'2-digit'})}</p></div>`}
+{const si0=savedInfo;savedInfo=function(name,data){if(typeof name=='string'&&name===BK){const sz=String(data||'').length,m0=modal,add=bkStatement(typeof Blob!='undefined'?new Blob([String(data||'')]).size:sz);modal=h=>m0(h.includes('<div class=bar><button class=btn data-a=shl>')?h.replace('<div class=bar><button class=btn data-a=shl>',add+'<div class=bar><button class=btn data-a=shl>'):h+add);try{return si0(name,data)}finally{modal=m0}}return si0(name,data)}}
+{const b0=A.bk;A.bk=function(){const r=b0.apply(this,arguments);try{modal(bkStatement(0)+'<div class=bar><button class=btn data-a=x>تم</button></div>')}catch(_){}return r}}
+{const b0=A.bks;A.bks=function(){const s=bkStats();toast('✓ نسخة: '+s.st+' طالب · '+s.m+' شهرية · '+s.d+' يومية');return b0.apply(this,arguments)}}
 </script><script>
 /* ===== التحديث اليدوي: لا يتغير شيء إلا حين يضغط المستخدم «تحديث الآن» من الإعدادات ===== */
-const APP_VERSION='1.28.1';
+const APP_VERSION='1.28.2';
 const UP={latest:null,notes:'',st:'',last:null,bks:[],files:null};
 const cmp=(a,b)=>{a=String(a).split('.').map(Number);b=String(b).split('.').map(Number);for(let i=0;i<3;i++){if((a[i]||0)!=(b[i]||0))return(a[i]||0)>(b[i]||0)?1:-1}return 0};
 const tx=(m,f)=>dbp.then(db=>new Promise((res,rej)=>{const t=db.transaction('kv',m),o=f(t.objectStore('kv'));t.oncomplete=()=>res(o.result);t.onerror=()=>rej(t.error)}));
